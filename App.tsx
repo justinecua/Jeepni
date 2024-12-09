@@ -1,118 +1,107 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import React, { useState } from 'react';
+import SplashScreen from './pages/SplashScreen';
+import StartingPage from './pages/StartingPage';
+import StartingPage2 from './pages/StartingPage2';
+import RegisterPage from './pages/RegisterPage';
+import LoginPage from './pages/LoginPage';
+import DriverReg1 from './pages/JeepNi_DriverReg1';
+import HomePage from './pages/Homepage';
+import MapPage from './pages/MapPage';
+import ProfilePage from './pages/ProfilePage';
+import NotificationsPage from './pages/NotificationPage';
+import BottomNavBar from './pages/BottomNavbar';
+import AdminBottomNavBar from './pages/Admin/AdminBottomNavbar';
+import AdminHomePage from './pages/Admin/AdminHomePage';
+import AdminMapPage from './pages/Admin/MapPage';
+import AdminNotificationPage from './pages/Admin/NotificationPage';
+import AdminProfilePage from './pages/Admin/ProfilePage';
+import DriverReg2 from './pages/JeepNi_DriverReg2';
+import DriverReg3 from './pages/JeepNi_DriverReg3';
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+const App = () => {
+  const [currentPage, setCurrentPage] = useState('SplashScreen');
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
-
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  const pages = {
+    SplashScreen: <SplashScreen onFinish={() => setCurrentPage('StartingPage')} />,
+    StartingPage: (
+      <StartingPage
+        onRegister={() => setCurrentPage('RegisterPage')}
+        onDriver={() => setCurrentPage('StartingPage2')}
+      />
+    ),
+    RegisterPage: (
+      <RegisterPage
+        onBack={() => setCurrentPage('StartingPage')}
+        onLogin={() => setCurrentPage('LoginPage')}
+        onHomePage={() => setCurrentPage('HomePage')}
+      />
+    ),
+    LoginPage: (
+      <LoginPage
+        onBack={() => setCurrentPage('StartingPage')}
+        onRegister={() => setCurrentPage('RegisterPage')}
+        onHomePage={() => setCurrentPage('HomePage')}
+        onAdminPage={() => setCurrentPage('AdminHomePage')}
+      />
+    ),
+    DriverReg1: (
+      <DriverReg1
+        onDriver={() => setCurrentPage('StartingPage2')}
+        onDriverDocuments={() => setCurrentPage('DriverReg2')}
+      />
+    ),
+    DriverReg2: (
+      <DriverReg2
+      onDriverReg1={() => setCurrentPage('DriverReg1')}
+      onDriverReg3={() => setCurrentPage('DriverReg3')}
+      />
+    ),
+    DriverReg3: (
+      <DriverReg3
+      onDriverReg2={() => setCurrentPage('DriverReg2')}
+      />
+    ),
+    StartingPage2: (
+      <StartingPage2
+        onStartPage1={() => setCurrentPage('StartingPage')}
+        onRegDriver={() => setCurrentPage('DriverReg1')}
+      />
+    ),
+    HomePage: (
+      <HomePage onNavigate={setCurrentPage} />
+    ),
+    MapPage: <MapPage />,
+    ProfilePage: (
+      <ProfilePage
+        onBack={() => setCurrentPage('StartingPage')}
+      />
+    ),
+    NotificationsPage: <NotificationsPage />,
+    AdminHomePage: (
+      <AdminHomePage onNavigate={setCurrentPage}/>
+    ),
+    AdminMapPage: <AdminMapPage/>,
+    AdminProfilePage: (
+      <AdminProfilePage
+        onBack={() => setCurrentPage('LoginPage')}
+      />
+    ),
+    AdminNotificationPage: (
+      <AdminNotificationPage/>
+    ),
   };
 
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-}
+  const showBottomNavBar = ['HomePage', 'MapPage', 'ProfilePage', 'NotificationsPage'].includes(currentPage);
+  const AdminshowBottomNavBar = ['AdminHomePage', 'AdminMapPage', 'AdminProfilePage', 'AdminNotificationPage'].includes(currentPage);
 
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+  return (
+    <>
+      {pages[currentPage] || pages.SplashScreen}
+
+      {showBottomNavBar && <BottomNavBar onNavigate={setCurrentPage} />}
+      {AdminshowBottomNavBar && <AdminBottomNavBar onNavigate={setCurrentPage} />}
+    </>
+  );
+};
 
 export default App;

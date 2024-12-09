@@ -1,0 +1,5 @@
+npm install react-native-linear-gradient
+npm install react-native-radial-gradient
+npm install axios
+npx react-native-asset
+
