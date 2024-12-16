@@ -6,7 +6,7 @@ import LinearGradient from 'react-native-linear-gradient'
 const LoginPage = ({ onBack, onRegister, onHomePage, onAdminPage }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+  console.log(password)
   const handleLogin = async () => {
     if (!email || !password) {
       Alert.alert("Error", "All fields are required");
@@ -17,19 +17,16 @@ const LoginPage = ({ onBack, onRegister, onHomePage, onAdminPage }) => {
       const response = await fetch('http://34.162.235.125/JeepNi/login.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password}),
       });
 
       const data = await response.json();
-      console.log(data);
-
       if (response.ok && data.message === 'Login successful') {
+        const username = data.username;
         if (data.accType_id === 1) {
-          onAdminPage();
+          onAdminPage(username);
         } else if (data.accType_id === 3) {
-          onHomePage();
-        } else {
-          Alert.alert('Error', 'Unsupported account type');
+          onHomePage(username);
         }
       } else {
         Alert.alert('Error', data.message || 'Login Failed');

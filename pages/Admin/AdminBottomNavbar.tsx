@@ -71,14 +71,14 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     flex: 1,
-    padding: 20,
+    padding: 15,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'white',
   },
   navItem: {
     width: 22,
-    height: 22,
+    height: 20,
     resizeMode: 'contain',
   },
 });

@@ -17,9 +17,11 @@ import AdminNotificationPage from './pages/Admin/NotificationPage';
 import AdminProfilePage from './pages/Admin/ProfilePage';
 import DriverReg2 from './pages/JeepNi_DriverReg2';
 import DriverReg3 from './pages/JeepNi_DriverReg3';
+import RoutePage from './pages/Admin/RoutesPage';
 
 const App = () => {
   const [currentPage, setCurrentPage] = useState('SplashScreen');
+  const [username, setUsername] = useState('');
 
   const pages = {
     SplashScreen: <SplashScreen onFinish={() => setCurrentPage('StartingPage')} />,
@@ -40,8 +42,14 @@ const App = () => {
       <LoginPage
         onBack={() => setCurrentPage('StartingPage')}
         onRegister={() => setCurrentPage('RegisterPage')}
-        onHomePage={() => setCurrentPage('HomePage')}
-        onAdminPage={() => setCurrentPage('AdminHomePage')}
+        onHomePage={(username) => {
+          setUsername(username);
+          setCurrentPage('HomePage');
+        }}
+        onAdminPage={(username) => {
+          setUsername(username);
+          setCurrentPage('AdminHomePage');
+        }}
       />
     ),
     DriverReg1: (
@@ -68,7 +76,7 @@ const App = () => {
       />
     ),
     HomePage: (
-      <HomePage onNavigate={setCurrentPage} />
+      <HomePage onNavigate={setCurrentPage}/>
     ),
     MapPage: <MapPage />,
     ProfilePage: (
@@ -78,7 +86,11 @@ const App = () => {
     ),
     NotificationsPage: <NotificationsPage />,
     AdminHomePage: (
-      <AdminHomePage onNavigate={setCurrentPage}/>
+      <AdminHomePage 
+      onNavigate={setCurrentPage}
+      onRoutePage={() => setCurrentPage('RoutePage')}
+      username={username}
+      />
     ),
     AdminMapPage: <AdminMapPage/>,
     AdminProfilePage: (
@@ -88,6 +100,9 @@ const App = () => {
     ),
     AdminNotificationPage: (
       <AdminNotificationPage/>
+    ),
+    RoutePage: (
+      <RoutePage/>
     ),
   };
 
