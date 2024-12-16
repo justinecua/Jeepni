@@ -102,7 +102,7 @@ const App = () => {
       <AdminNotificationPage/>
     ),
     RoutePage: (
-      <RoutePage/>
+    <RoutePage onBack={() => setCurrentPage('AdminHomePage')} />
     ),
   };
 

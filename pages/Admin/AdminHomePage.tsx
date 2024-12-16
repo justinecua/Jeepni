@@ -24,8 +24,8 @@ const AdminHomePage = ({ onNavigate, username, onRoutePage }) => {
           const totals = response.data.totals;
 
           const dataArray = Object.values(weekData);
-          setChartData(dataArray); // Set chart data for weekly overview
-          setTallyData(totals); // Set overall totals
+          setChartData(dataArray);
+          setTallyData(totals); 
         } else {
           console.error('Error fetching tally data:', response.data.message);
           setChartData([0, 0, 0, 0, 0, 0, 0]); 
@@ -81,7 +81,7 @@ const AdminHomePage = ({ onNavigate, username, onRoutePage }) => {
                 },
               ],
             }}
-            width={370}
+            width={340}
             height={200} 
             chartConfig={{
               backgroundColor: '#1A9B88',
@@ -154,18 +154,58 @@ const AdminHomePage = ({ onNavigate, username, onRoutePage }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#1A202C', 
     padding: 20,
+  },
+  header: {
+    marginBottom: 20,
+  },
+  greeting: {
+    fontSize: 28,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    marginBottom: 5,
+  },
+  context: {
+    fontSize: 16,
+    fontWeight: '400',
+    color: '#A0AEC0',
+  },
+  chartContainer: {
+    marginBottom: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)', 
+    borderRadius: 15,
+    padding: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+  chartTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#FFFFFF',
+    marginBottom: 10,
+  },
+  chart: {
+    borderRadius: 15,
   },
   tallyContainer: {
     marginBottom: 20,
-    backgroundColor: '#f5f5f5',
-    padding: 15,
-    borderRadius: 10,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)', 
+    padding: 20,
+    borderRadius: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 5,
   },
   tallyTitle: {
     fontSize: 18,
     fontWeight: '600',
+    color: '#FFFFFF',
     marginBottom: 10,
   },
   tallyItem: {
@@ -175,38 +215,12 @@ const styles = StyleSheet.create({
   },
   tallyLabel: {
     fontSize: 16,
-    color: '#333',
+    color: '#A0AEC0',
   },
   tallyValue: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#1A9B88',
-  },
-  header: {
-    marginBottom: 20,
-  },
-  greeting: {
-    fontSize: 28,
-    fontWeight: '700',
-    color: '#1A9B88',
-    marginBottom: 3,
-  },
-  context: {
-    fontSize: 16,
-    fontWeight: '400',
-    color: '#555',
-  },
-  chartContainer: {
-    marginBottom: 20,
-  },
-  chartTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 10,
-  },
-  chart: {
-    borderRadius: 15,
+    color: '#4FD1C5',
   },
   recentDriversContainer: {
     marginBottom: 20,
@@ -214,16 +228,21 @@ const styles = StyleSheet.create({
   recentDriversTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#333',
+    color: '#FFFFFF',
     marginBottom: 10,
   },
   driverCard: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 15,
-    backgroundColor: '#f5f5f5',
-    padding: 10,
-    borderRadius: 10,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    padding: 15,
+    borderRadius: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 5,
   },
   driverImage: {
     width: 50,
@@ -237,20 +256,20 @@ const styles = StyleSheet.create({
   driverName: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#333',
+    color: '#FFFFFF',
   },
   driverStatus: {
     fontSize: 14,
-    color: '#666',
+    color: '#A0AEC0',
   },
   viewDetailsButton: {
-    backgroundColor: '#1A9B88',
+    backgroundColor: '#4FD1C5',
     paddingVertical: 5,
     paddingHorizontal: 15,
     borderRadius: 5,
   },
   viewDetailsText: {
-    color: '#fff',
+    color: '#1A202C',
     fontSize: 14,
     fontWeight: '600',
   },
@@ -260,22 +279,23 @@ const styles = StyleSheet.create({
   card: {
     borderRadius: 15,
     padding: 20,
-    marginBottom: 10,
+    marginBottom: 15,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
     elevation: 5,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)', 
   },
   title: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#fff',
+    color: '#FFFFFF',
     marginBottom: 10,
   },
   count: {
     fontSize: 16,
-    color: '#fff',
+    color: '#A0AEC0',
   },
   arrowContainer: {
     position: 'absolute',
@@ -290,8 +310,9 @@ const styles = StyleSheet.create({
   },
   arrow: {
     fontSize: 18,
-    color: '#fff',
+    color: '#FFFFFF',
   },
 });
 
 export default AdminHomePage;
+

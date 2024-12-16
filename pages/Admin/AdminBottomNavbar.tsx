@@ -60,9 +60,8 @@ const styles = StyleSheet.create({
   navBar: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    backgroundColor: '#fff',
+    backgroundColor: '#1A202C', 
     borderTopWidth: 1,
-    borderTopColor: 'white',
     position: 'absolute',
     bottom: 0,
     left: 0,
@@ -74,12 +73,13 @@ const styles = StyleSheet.create({
     padding: 15,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: 'transparent', 
   },
   navItem: {
     width: 22,
-    height: 20,
+    height: 25,
     resizeMode: 'contain',
+    borderRadius: 15,
   },
 });
 
