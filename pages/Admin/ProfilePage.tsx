@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     padding: 20,
     flex: 1,
     alignItems: 'flex-start',
-    backgroundColor: 'white',
+    backgroundColor: '#1A202C', 
   },
   RPButton: {
     width: '100%',

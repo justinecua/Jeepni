@@ -1,32 +1,62 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
 import RadialGradient from 'react-native-radial-gradient';
 import LinearGradient from 'react-native-linear-gradient';
+import axios from 'axios';
+import BASE_URL from "../config.js";
 
-const DriverReg1 = ({onDriver, onDriverDocuments}) => {
-  const [text, setText] = useState('');
-  const [text2, setText2] = useState('');
+const DriverReg1 = ({ onDriver, onDriverDocuments }) => {
+  const [driverData, setDriverData] = useState({
+    username: '',
+    email: '',
+    password: '',
+  });
 
+  const handleInputChange = (field, value) => {
+    setDriverData(prevData => ({ ...prevData, [field]: value }));
+  };
+
+  const handleSubmit = async () => {
+    const { username, email, password } = driverData;
+
+    if (!username || !email || !password) {
+      alert("Please fill all the fields.");
+      return;
+    }
+
+    try {
+      const response = await axios.post(`${BASE_URL}/JeepNi/registerDriver.php`, driverData, {
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      const data = response.data;
+      alert("Registration successful!");
+      onDriverDocuments('DriverMainPage'); 
+
+    } catch (error) {
+      console.error('Error:', error);
+      alert('There was an error submitting the form.');
+    }
+  };
   return (
     <RadialGradient
-    style={{ width: 300, height: 200, borderRadius: 100 }}
-    colors={["#005F4F", "#053143"]}
-    center={[100, 100]}
-    radius={600}
-    style={styles.gradient2}
-  >
-    <View style={styles.registerContainer}>
+      style={{ width: 300, height: 200, borderRadius: 100 }}
+      colors={["#005F4F", "#053143"]}
+      center={[100, 100]}
+      radius={600}
+      style={styles.gradient2}
+    >
+      <View style={styles.registerContainer}>
         <View style={styles.RPTop}>
           <TouchableOpacity onPress={onDriver} style={styles.backButton}>
-          <Text style={styles.backText}>Go back</Text>
+            <Text style={styles.backText}>Go back</Text>
           </TouchableOpacity>
-
         </View>
-      <View style={styles.RPTitleDiv}>
-        <Text style={styles.RPTitle}>JEEPNI</Text>
-        <Text style={styles.RPTitle2}>DRIVER REGISTRATION</Text>
+        <View style={styles.RPTitleDiv}>
+          <Text style={styles.RPTitle}>JEEPNI</Text>
+          <Text style={styles.RPTitle2}>DRIVER REGISTRATION</Text>
+        </View>
       </View>
-    </View>
 
       <View style={styles.registerContainer2}>
         <View style={styles.RC2Top}>
@@ -34,73 +64,49 @@ const DriverReg1 = ({onDriver, onDriverDocuments}) => {
         </View>
         <View style={styles.RC2Mid}>
           <View style={styles.InputDiv}>
-              <Text style={styles.InputDivLabel}>First Name</Text>
-              <TextInput
+            <Text style={styles.InputDivLabel}>Username</Text>
+            <TextInput
               style={styles.input}
-              placeholder="Input your first name"
+              placeholder="Input your username"
               placeholderTextColor="#888"
-              value={text}
-              onChangeText={setText}
-              />
+              value={driverData.username}
+              onChangeText={(value) => handleInputChange('username', value)}
+            />
 
-              <Text style={styles.InputDivLabel}>Last Name</Text>
-              <TextInput
-              style={styles.input}
-              placeholder="Input your last name"
-              placeholderTextColor="#888"
-              value={text}
-              onChangeText={setText}
-              />
-
-              <Text style={styles.InputDivLabel}>Mobile Number</Text>
-              <TextInput
-              style={styles.input}
-              placeholder="Input your Mobile Number"
-              placeholderTextColor="#888"
-              value={text2}
-              onChangeText={setText2}
-              />
-
-              <Text style={styles.InputDivLabel}>Home Address</Text>
-              <TextInput
-              style={styles.input}
-              placeholder="Input your Home Address"
-              placeholderTextColor="#888"
-              value={text2}
-              onChangeText={setText2}
-              />
-
-              <Text style={styles.InputDivLabel}>Email Address</Text>
-              <TextInput
+            <Text style={styles.InputDivLabel}>Email Address</Text>
+            <TextInput
               style={styles.input}
               placeholder="Input your email address"
               placeholderTextColor="#888"
-              value={text}
-              onChangeText={setText}
-              />
+              value={driverData.email}
+              onChangeText={(value) => handleInputChange('email', value)}
+            />
 
-
+            <Text style={styles.InputDivLabel}>Password</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Input your password"
+              placeholderTextColor="#888"
+              secureTextEntry
+              value={driverData.password}
+              onChangeText={(value) => handleInputChange('password', value)}
+            />
           </View>
-          <TouchableOpacity style={styles.RPButton} onPress={onDriverDocuments}>
-          <LinearGradient
-            start={{ x: 1, y: 1 }}
-            end={{ x: 0, y: 1 }}
-            colors={["#005F4F", "#053143"]}
-            style={styles.buttonGradient}
-          >
-            <Text style={styles.buttonText}>Proceed to Documents</Text>
-          </LinearGradient>
-        </TouchableOpacity>
-
+          <TouchableOpacity style={styles.RPButton} onPress={handleSubmit}>
+            <LinearGradient
+              start={{ x: 1, y: 1 }}
+              end={{ x: 0, y: 1 }}
+              colors={["#005F4F", "#053143"]}
+              style={styles.buttonGradient}
+            >
+              <Text style={styles.buttonText}>Register</Text>
+            </LinearGradient>
+          </TouchableOpacity>
         </View>
-
-      </View>
-      <View style={styles.registerContainer3}>
       </View>
     </RadialGradient>
   );
-}
-
+};
 const styles = StyleSheet.create({
 
   FPDivText:{

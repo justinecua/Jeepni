@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput, Alert } from 'react-native';
 import RadialGradient from 'react-native-radial-gradient';
 import LinearGradient from 'react-native-linear-gradient'
+import BASE_URL from "../config.js";
+import axios from 'axios';
 
 const LoginPage = ({ onBack, onRegister, onHomePage, onAdminPage }) => {
   const [email, setEmail] = useState('');
@@ -14,7 +16,7 @@ const LoginPage = ({ onBack, onRegister, onHomePage, onAdminPage }) => {
     }
 
     try {
-      const response = await fetch('http://34.162.235.125/JeepNi/login.php', {
+      const response = await fetch(`${BASE_URL}/JeepNi/login.php`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password}),

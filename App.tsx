@@ -18,10 +18,23 @@ import AdminProfilePage from './pages/Admin/ProfilePage';
 import DriverReg2 from './pages/JeepNi_DriverReg2';
 import DriverReg3 from './pages/JeepNi_DriverReg3';
 import RoutePage from './pages/Admin/RoutesPage';
+import DriverMainPage from './pages/DriverMainPage';
 
 const App = () => {
   const [currentPage, setCurrentPage] = useState('SplashScreen');
   const [username, setUsername] = useState('');
+   const [driverData, setDriverData] = useState({
+    firstname: '',
+    lastname: '',
+    mobileNumber: '',
+    homeAddress: '',
+    emailAddress: '',
+    licensePlateNo: '',
+    codeNo: '',
+    licenseNo: '',
+    licensePhoto: null,
+    registrationPhoto: null,
+  });
 
   const pages = {
     SplashScreen: <SplashScreen onFinish={() => setCurrentPage('StartingPage')} />,
@@ -52,21 +65,28 @@ const App = () => {
         }}
       />
     ),
-    DriverReg1: (
-      <DriverReg1
-        onDriver={() => setCurrentPage('StartingPage2')}
-        onDriverDocuments={() => setCurrentPage('DriverReg2')}
-      />
-    ),
+DriverReg1: (
+  <DriverReg1
+    onDriver={() => setCurrentPage('StartingPage2')}
+    onDriverDocuments={() => setCurrentPage('DriverMainPage')} // Redirect after registration
+    driverData={driverData}
+    setDriverData={setDriverData}
+  />
+),
+
     DriverReg2: (
       <DriverReg2
-      onDriverReg1={() => setCurrentPage('DriverReg1')}
-      onDriverReg3={() => setCurrentPage('DriverReg3')}
+      	onDriverReg1={() => setCurrentPage('DriverReg1')}
+      	onDriverReg3={() => setCurrentPage('DriverReg3')}
+	driverData={driverData}
+	setDriverData={setDriverData}
       />
     ),
     DriverReg3: (
       <DriverReg3
       onDriverReg2={() => setCurrentPage('DriverReg2')}
+        driverData={driverData}
+
       />
     ),
     StartingPage2: (
@@ -104,6 +124,7 @@ const App = () => {
     RoutePage: (
     <RoutePage onBack={() => setCurrentPage('AdminHomePage')} />
     ),
+     DriverMainPage: <DriverMainPage />,
   };
 
   const showBottomNavBar = ['HomePage', 'MapPage', 'ProfilePage', 'NotificationsPage'].includes(currentPage);

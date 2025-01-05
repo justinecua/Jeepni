@@ -12,33 +12,72 @@ import RadialGradient from 'react-native-radial-gradient';
 import LinearGradient from 'react-native-linear-gradient';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { Picker } from '@react-native-picker/picker';
+import axios from 'axios';
+import BASE_URL from "../config.js";
 
-const DriverReg3 = ({onDriverReg2}) => {
-  const [text, setText] = useState('');
-  const [text2, setText2] = useState('');
-  const [licensePhoto, setLicensePhoto] = useState(null);
-  const [registrationPhoto, setRegistrationPhoto] = useState(null);
+const DriverReg3 = ({onDriverReg2, driverData}) => {
+  const [username, setUsername] = useState('');
   const [gender, setGender] = useState('');
-
-  const selectPhoto = (setPhoto) => {
+  const [password, setPassword] = useState(null);
+  const [confirmPass, setConfirmPass] = useState(null);
+  const [photo, setPhoto] = useState(null);
+  
+  const selectPhoto = () => {
     launchImageLibrary(
-      {
-        mediaType: 'photo',
-        maxWidth: 300,
-        maxHeight: 300,
-        quality: 1,
-      },
+      {mediaType: 'photo', quality: 0.5},
       (response) => {
-        if (response.didCancel) {
-          console.log('User cancelled image picker');
-        } else if (response.errorMessage) {
-          console.log('ImagePicker Error: ', response.errorMessage);
-        } else {
-          const source = { uri: response.assets[0].uri };
-          setPhoto(source);
+        if (response.assets && response.assets.length > 0) {
+          setPhoto(response.assets[0].uri); 
         }
       }
     );
+  };
+
+  const handleSubmit = async () => {
+    if (password !== confirmPass) {
+      alert("Passwords do not match");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('first_name', driverData.firstname);
+    formData.append('last_name', driverData.lastname);
+    formData.append('mobile_number', driverData.mobileNumber);
+    formData.append('home_address', driverData.homeAddress);
+    formData.append('email_address', driverData.emailAddress);
+    formData.append('license_plate_no', driverData.licensePlateNo);
+    formData.append('code_no_route', driverData.codeNo);
+    formData.append('driver_license_no', driverData.licenseNo);
+    formData.append('driver_license_photo', driverData.licensePhoto);
+    formData.append('jeepney_registration_photo', driverData.registrationPhoto);
+
+    if (photo) {
+      formData.append('account_photo', {
+        uri: photo.uri,
+        type: 'image/jpeg',
+        name: 'account_photo.jpg',
+      });
+    }
+
+    formData.append('gender', gender);
+    formData.append('account_username', username);
+    formData.append('account_password', password);
+    console.log(formData);
+    try {
+      const response = await axios.post(`${BASE_URL}/JeepNi/insertDriver.php`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      
+      if (response.data.status === 'success') {
+        console.log('Driver Registered:', response.data.message);
+      } else {
+        console.log('Error:', response.data.message);
+      }
+    } catch (error) {
+      console.error('Error registering driver:', error);
+    }
   };
 
   return (
@@ -64,10 +103,14 @@ const DriverReg3 = ({onDriverReg2}) => {
         <ScrollView contentContainerStyle={styles.scrollContainer}>
 
           <View style={styles.DriverProfile}>
-              <Image
-                source={ require('../src/img/camera.png')}
-                style={styles.cameraIcon}
-              />
+            {/* Show the selected photo */}
+            {photo ? (
+              <Image source={{uri: photo}} style={styles.profileImage} />
+            ) : (
+              <TouchableOpacity onPress={selectPhoto} style={styles.cameraIcon}>
+                <Image source={require('../src/img/camera.png')} style={styles.cameraIcon} />
+              </TouchableOpacity>
+            )}
           </View>
 
           <View style={styles.RC2Top}>
@@ -82,8 +125,8 @@ const DriverReg3 = ({onDriverReg2}) => {
                 style={styles.input}
                 placeholder="Input your username"
                 placeholderTextColor="#888"
-                value={text}
-                onChangeText={setText}
+                value={username}
+                onChangeText={setUsername}
               />
               <Text style={styles.InputDivLabel}>Gender</Text>
                 <View style={styles.pickerContainer}>
@@ -106,8 +149,8 @@ const DriverReg3 = ({onDriverReg2}) => {
                 style={styles.input}
                 placeholder="Input your password"
                 placeholderTextColor="#888"
-                value={text}
-                onChangeText={setText}
+                value={password}
+                onChangeText={setPassword}
               />
 
               <Text style={styles.InputDivLabel}>Confirm Password</Text>
@@ -115,13 +158,13 @@ const DriverReg3 = ({onDriverReg2}) => {
                 style={styles.input}
                 placeholder="Input your password"
                 placeholderTextColor="#888"
-                value={text2}
-                onChangeText={setText2}
+                value={confirmPass}
+                onChangeText={setConfirmPass}
               />
 
             </View>
 
-            <TouchableOpacity style={styles.RPButton}>
+            <TouchableOpacity style={styles.RPButton} onPress={handleSubmit}>
               <LinearGradient
                 start={{ x: 1, y: 1 }}
                 end={{ x: 0, y: 1 }}
@@ -141,9 +184,15 @@ const DriverReg3 = ({onDriverReg2}) => {
 
 const styles = StyleSheet.create({
   cameraIcon:{
-    margin: 'auto',
     width: 30,
     height: 25,
+    alignSelf: 'center',
+  },
+  profileImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: '#ccc',
   },
   DriverProfile: {
     marginTop: '5%',
@@ -152,6 +201,8 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     backgroundColor: '#90C5BC',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   scrollContainer: {
     paddingBottom: 20,

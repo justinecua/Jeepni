@@ -12,11 +12,10 @@ import RadialGradient from 'react-native-radial-gradient';
 import LinearGradient from 'react-native-linear-gradient';
 import { launchImageLibrary } from 'react-native-image-picker';
 
-const DriverReg2 = ({ onDriverReg1, onDriverReg3}) => {
-  const [text, setText] = useState('');
-  const [text2, setText2] = useState('');
-  const [licensePhoto, setLicensePhoto] = useState(null);
-  const [registrationPhoto, setRegistrationPhoto] = useState(null);
+const DriverReg2 = ({ onDriverReg1, onDriverReg3, onDriver, setDriverData, driverData}) => {
+const handleInputChange = (key, value) => {
+    setDriverData((prevData) => ({ ...prevData, [key]: value }));
+  };
 
   const selectPhoto = (setPhoto) => {
     launchImageLibrary(
@@ -27,17 +26,23 @@ const DriverReg2 = ({ onDriverReg1, onDriverReg3}) => {
         quality: 1,
       },
       (response) => {
+          console.log(response);
         if (response.didCancel) {
           console.log('User cancelled image picker');
         } else if (response.errorMessage) {
           console.log('ImagePicker Error: ', response.errorMessage);
         } else {
           const source = { uri: response.assets[0].uri };
-          setPhoto(source);
+          // Update the corresponding field (licensePhoto or registrationPhoto) in driverData
+          setDriverData((prevData) => ({
+            ...prevData,
+            [setPhoto]: source,  // Dynamically set the photo based on the field name passed
+          }));
         }
       }
     );
   };
+
 
   return (
     <RadialGradient
@@ -72,8 +77,8 @@ const DriverReg2 = ({ onDriverReg1, onDriverReg3}) => {
                 style={styles.input}
                 placeholder="Input Jeepney License Plate Number"
                 placeholderTextColor="#888"
-                value={text}
-                onChangeText={setText}
+                value={driverData.licensePlateNo}
+                onChangeText={(value) => handleInputChange('licensePlateNo', value)}
               />
 
               <Text style={styles.InputDivLabel}>
@@ -83,8 +88,8 @@ const DriverReg2 = ({ onDriverReg1, onDriverReg3}) => {
                 style={styles.input}
                 placeholder="Format eg: 7A Tambo Gerona - City Proper"
                 placeholderTextColor="#888"
-                value={text}
-                onChangeText={setText}
+                value={driverData.codeNo}
+                onChangeText={(value) => handleInputChange('codeNo', value)}
               />
 
               <Text style={styles.InputDivLabel}>Driver's License Number</Text>
@@ -92,33 +97,37 @@ const DriverReg2 = ({ onDriverReg1, onDriverReg3}) => {
                 style={styles.input}
                 placeholder="Input your License Number"
                 placeholderTextColor="#888"
-                value={text2}
-                onChangeText={setText2}
+                value={driverData.licenseNo}
+                onChangeText={(value) => handleInputChange('licenseNo', value)}
               />
 
               <Text style={styles.InputDivLabel}>Driver's License Photo</Text>
-              <TouchableOpacity
-                style={styles.uploadButton}
-                onPress={() => selectPhoto(setLicensePhoto)}
-              >
-                <Text style={styles.uploadButtonText}>
-                  {licensePhoto ? 'Change Photo' : 'Upload Photo'}
-                </Text>
-              </TouchableOpacity>
-              {licensePhoto && <Image source={licensePhoto} style={styles.image} />}
+      <TouchableOpacity
+        style={styles.uploadButton}
+        onPress={() => selectPhoto('licensePhoto')}  // Pass the field name to selectPhoto
+      >
+        <Text style={styles.uploadButtonText}>
+          {driverData.licensePhoto ? 'Change Photo' : 'Upload Photo'}
+        </Text>
+      </TouchableOpacity>
+      {driverData.licensePhoto && (
+        <Image source={driverData.licensePhoto} style={styles.image} />
+      )}
 
-              <Text style={styles.InputDivLabel}>
-                Jeepney Registration Photo (CR / OR)
-              </Text>
-              <TouchableOpacity
-                style={styles.uploadButton}
-                onPress={() => selectPhoto(setRegistrationPhoto)}
-              >
-                <Text style={styles.uploadButtonText}>
-                  {registrationPhoto ? 'Change Photo' : 'Upload Photo'}
-                </Text>
-              </TouchableOpacity>
-              {registrationPhoto && <Image source={registrationPhoto} style={styles.image} />}
+      <Text style={styles.InputDivLabel}>Jeepney Registration Photo (CR / OR)</Text>
+
+      {/* Registration Photo */}
+      <TouchableOpacity
+        style={styles.uploadButton}
+        onPress={() => selectPhoto('registrationPhoto')}  // Pass the field name to selectPhoto
+      >
+        <Text style={styles.uploadButtonText}>
+          {driverData.registrationPhoto ? 'Change Photo' : 'Upload Photo'}
+        </Text>
+      </TouchableOpacity>
+      {driverData.registrationPhoto && (
+        <Image source={driverData.registrationPhoto} style={styles.image} />
+      )} 
             </View>
 
             <TouchableOpacity style={styles.RPButton} onPress={onDriverReg3}>

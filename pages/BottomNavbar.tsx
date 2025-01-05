@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
   },
   navItem: {
     width: 22,
-    height: 22,
+    height: 19,
     resizeMode: 'contain',
   },
 });

@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Image, Alert, TextInput } fro
 import RadialGradient from 'react-native-radial-gradient';
 import LinearGradient from 'react-native-linear-gradient';
 import axios from 'axios';
+import BASE_URL from "../config.js";
 
 const RegisterPage = ({ onBack, onLogin, onHomePage }) => {
   const [username, setUsername] = useState('');
@@ -28,7 +29,7 @@ const RegisterPage = ({ onBack, onLogin, onHomePage }) => {
       return;
     }
 
-    axios.post('http://34.162.235.125/JeepNi/register.php', {
+    axios.post(`${BASE_URL}/JeepNi/register.php`, {
       username,
       email,
       password,
