@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState} from 'react';
 import {
   View,
   Text,
@@ -10,22 +10,22 @@ import {
   ActivityIndicator,
   Modal,
 } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
+import { Picker } from '@react-native-picker/picker'; // Import Picker
 
 const RoutePage = ({ onBack }) => {
   const [routes, setRoutes] = useState([]);
+  const [bounds, setBounds] = useState([]);
   const [code, setCode] = useState('');
   const [route, setRoute] = useState('');
   const [boundId, setBoundId] = useState('');
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
 
-  useEffect(() => {
+
     const fetchRoutes = async () => {
       try {
         const response = await fetch('http://34.162.235.125/JeepNi/fetchRoutes.php');
         const data = await response.json();
-        console.log(data);
         if (data.success) setRoutes(data.data);
         else Alert.alert('Error', data.message);
       } catch (error) {
@@ -35,8 +35,20 @@ const RoutePage = ({ onBack }) => {
       }
     };
 
+    const fetchBounds = async () => {
+      try {
+        const response = await fetch('http://34.162.235.125/JeepNi/fetchBounds.php');
+        const data = await response.json();
+        if (data.success) setBounds(data.data); // Update to set bounds data
+        else Alert.alert('Error', data.message);
+      } catch (error) {
+        Alert.alert('Error', 'Failed to fetch bounds.');
+      }
+    };
+
+    fetchBounds();
     fetchRoutes();
-  }, []);
+
 
   const handleSave = async () => {
     if (code && route && boundId) {
@@ -54,7 +66,9 @@ const RoutePage = ({ onBack }) => {
           setCode('');
           setRoute('');
           setBoundId('');
-        } else Alert.alert('Error', data.message);
+	  fetchRoutes();
+	} else Alert.alert('Success', data.message);
+ 
       } catch (error) {
         Alert.alert('Error', 'Failed to save route.');
       }
@@ -67,7 +81,7 @@ const RoutePage = ({ onBack }) => {
     <View style={styles.routeItem}>
       <Text style={styles.routeText}>Code: {item.code}</Text>
       <Text style={styles.routeText}>Route: {item.route}</Text>
-      <Text style={styles.routeText}>Bound ID: {item.bound_id}</Text>
+      <Text style={styles.routeText}>Bound Name: {item.boundName}</Text>
     </View>
   );
 
@@ -112,14 +126,22 @@ const RoutePage = ({ onBack }) => {
               placeholder="Route"
               placeholderTextColor="#A0AEC0"
             />
-            <TextInput
-              style={styles.input}
-              value={boundId}
-              onChangeText={setBoundId}
-              placeholder="Bound ID"
-              placeholderTextColor="#A0AEC0"
-              keyboardType="numeric"
-            />
+            <View style={styles.pickerContainer}>
+              <Picker
+                selectedValue={boundId}
+                onValueChange={(itemValue) => setBoundId(itemValue)}
+                style={styles.picker}
+              >
+                <Picker.Item label="Select Bound" value="" />
+                {bounds.map((bound) => (
+                  <Picker.Item
+                    key={bound.bound_id}
+                    label={bound.boundName}
+                    value={bound.bound_id}
+                  />
+                ))}
+              </Picker>
+            </View>
             <View style={styles.modalButtons}>
               <TouchableOpacity style={styles.cancelButton} onPress={() => setModalVisible(false)}>
                 <Text style={styles.buttonTextCancel}>Cancel</Text>
@@ -136,9 +158,17 @@ const RoutePage = ({ onBack }) => {
 };
 
 const styles = StyleSheet.create({
+  pickerContainer: {
+    backgroundColor: '#4A5568',
+    borderRadius: 5,
+    marginBottom: 10,
+  },
+  picker: {
+    color: '#A0AEC0',
+  },
   container: {
     flex: 1,
-    backgroundColor: '#1A202C', 
+    backgroundColor: '#1A202C',
     padding: 20,
   },
   backButton: {

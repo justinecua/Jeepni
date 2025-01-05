@@ -103,7 +103,6 @@ const DriverReg3 = ({onDriverReg2, driverData}) => {
         <ScrollView contentContainerStyle={styles.scrollContainer}>
 
           <View style={styles.DriverProfile}>
-            {/* Show the selected photo */}
             {photo ? (
               <Image source={{uri: photo}} style={styles.profileImage} />
             ) : (

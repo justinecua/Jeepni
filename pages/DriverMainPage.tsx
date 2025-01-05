@@ -21,26 +21,7 @@ const DriverMainPage = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Welcome to the Driver Main Page!</Text>
-      <MapView
-        style={styles.map}
-        initialRegion={{
-          latitude: 37.78825,
-          longitude: -122.4324,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}
-      >
-        {driverLocations.map((location) => (
-          <Marker
-            key={location.id}
-            coordinate={{
-              latitude: location.latitude,
-              longitude: location.longitude,
-            }}
-            title={`Driver ${location.id}`}
-          />
-        ))}
-      </MapView>
+
     </View>
   );
 };
